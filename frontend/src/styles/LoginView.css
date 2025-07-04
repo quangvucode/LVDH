@@ -1,0 +1,72 @@
+/* Giao diện form login căn giữa toàn màn hình */
+.login-container {
+    min-height: calc(100vh - 124px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    background-color: #f9fafb;
+}
+
+.login-form {
+    background: #fff;
+    padding: 32px 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.login-form h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #1e3a8a;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.login-form h2:hover {
+    color: #2563eb;
+    cursor: default;
+}
+
+.login-form input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.login-form button {
+    padding: 12px;
+    background-color: #2563eb;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.forgot-password-wrapper {
+    text-align: right;
+    margin-top: -6px;
+    margin-bottom: 8px;
+}
+
+.forgot-password-wrapper a {
+    color: #2563eb;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.forgot-password-wrapper a:hover {
+    text-decoration: underline;
+    color: #1d4ed8;
+}

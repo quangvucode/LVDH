@@ -1,0 +1,66 @@
+.register-container {
+    min-height: calc(100vh - 124px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 32px 16px 80px;
+    background-color: #f9fafb;
+    box-sizing: border-box;
+}
+
+.register-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 360px;
+    /* ✅ Giảm xuống từ 420px */
+}
+
+.register-form h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1e3a8a;
+    text-align: center;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.register-form h2:hover {
+    color: #2563eb;
+    cursor: default;
+}
+
+.register-form input {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+}
+
+.register-form button {
+    width: 100%;
+    background-color: #2563eb;
+    color: white;
+    padding: 12px;
+    font-weight: bold;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.register-form button:hover {
+    background-color: #1e40af;
+}
+
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: -6px;
+    margin-bottom: 10px;
+}

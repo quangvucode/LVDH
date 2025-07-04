@@ -1,0 +1,83 @@
+.navbar {
+    background: linear-gradient(to right, #5f00c0, #3f51b5);
+    /* tím sang xanh */
+    color: white;
+    padding: 14px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+}
+
+.logo-image {
+    height: 72px;
+    width: 72px;
+    object-fit: contain;
+    margin-right: 2px;
+}
+
+.logo-text {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.navbar-center {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-item,
+.logout-button {
+    font-size: 1rem;
+    color: white;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-item:hover,
+.logout-button:hover {
+    text-decoration: underline;
+}
+
+.logout-button {
+    font-weight: 500;
+}
+
+.gradient-text {
+    background: linear-gradient(to right, #facc15, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-link {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}

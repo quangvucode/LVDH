@@ -1,0 +1,175 @@
+.account-container {
+    background-color: #f9fafb;
+    min-height: calc(100vh - 124px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 12px;
+    box-sizing: border-box;
+}
+
+/* Khung tổng */
+.account-wrapper {
+    width: 100%;
+    max-width: 800px;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.account-wrapper h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1e3a8a;
+    text-align: center;
+}
+
+/* Lưới phân chia trái - phải */
+.account-grid {
+    display: grid;
+    grid-template-columns: 1fr 160px;
+    gap: 20px;
+    align-items: start;
+}
+
+.account-form label {
+    font-size: 0.95rem;
+    color: #374151;
+    font-weight: 500;
+}
+
+.account-form input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: #f9fafb;
+    margin-bottom: 14px;
+}
+
+.account-form input.disabled {
+    background-color: #f1f5f9;
+    color: #6b7280;
+}
+
+.account-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.account-buttons button {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.account-buttons button:first-child {
+    background-color: #3b82f6;
+    color: #ffffff;
+}
+
+.account-buttons .outline-btn {
+    background: #ffffff;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+}
+
+/* Lịch sử đặt phòng */
+.booking-history {
+    margin-top: 28px;
+    max-height: 180px;
+    overflow-y: auto;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 16px;
+}
+
+.booking-history ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.booking-history li {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    background-color: #f9fafb;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #1e3a8a;
+    text-align: center;
+}
+
+.modal input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.modal-buttons button {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-buttons .outline-btn {
+    background: #ffffff;
+    border: 2px solid #3b82f6;
+    color: #3b82f6;
+}
+
+.modal-buttons button:first-child {
+    background-color: #3b82f6;
+    color: white;
+}
+
+/* Lỗi */
+.error-text {
+    color: #dc2626;
+    font-size: 0.85rem;
+    margin: -4px 0 8px;
+}

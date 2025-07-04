@@ -1,0 +1,50 @@
+.footer {
+    height: 60px;
+    background-color: #f3f4f6;
+    border-top: 1px solid #d1d5db;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.social-icons {
+    display: flex;
+    gap: 16px;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: #e5e7eb;
+    color: #374151;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+}
+
+/* Hiệu ứng hover như Tailwind */
+.social-icons a:hover.facebook {
+    background-color: #3b5998;
+    /* Facebook blue */
+    color: white;
+}
+
+.social-icons a:hover.tiktok {
+    background-color: #000;
+    color: white;
+}
+
+.social-icons a:hover.instagram {
+    background-color: #ec4899;
+    color: white;
+}
+
+.social-icons a:hover.zalo {
+    background-color: #3b82f6;
+    color: white;
+}
