@@ -122,6 +122,7 @@ function PaymentView() {
                 onChange={handleChange}
                 className="payment-input"
               />
+            {sendEmail && (
               <input
                 type="email"
                 name="email"
@@ -130,6 +131,7 @@ function PaymentView() {
                 onChange={handleChange}
                 className="payment-input"
               />
+            )}
             </>
           )}
           <label className="email-checkbox">

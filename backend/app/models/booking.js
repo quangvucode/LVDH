@@ -48,14 +48,34 @@ const bookingSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  isConfirmed: {
-    type: Boolean,
-    default: false
-  },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'completed'],
+    default: 'pending'
+  },  
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+
+  bookingCode: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+
+  sendMail: { 
+    type: Boolean,
+    default: false,
+  },
+
+  cancelStatus: {
+  type: String,
+  enum: ['pending', 'accepted', 'rejected'],
+  default: undefined,
+  },
+
+  
 });
 
 module.exports = mongoose.model('Booking', bookingSchema);

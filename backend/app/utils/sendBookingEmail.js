@@ -20,8 +20,8 @@ const sendBookingEmail = async (booking, roomName) => {
       <p><strong>Xin chào ${booking.name || "Quý khách"},</strong></p>
       <p>Cảm ơn bạn đã đặt phòng tại <strong>RabbitHomestay</strong>.</p>
       <hr/>
-      <p><strong>Mã đơn:</strong> ${booking._id}</p>
-      <p><strong>Phòng:</strong> ${roomName}</p>
+      <p><strong>Mã đơn:</strong> ${booking.bookingCode}</p>
+      <p> ${roomName}</p>
       <p><strong>Ngày:</strong> ${new Date(booking.bookingDate).toLocaleDateString()}</p>
       <p><strong>Khung giờ:</strong> ${booking.timeSlots.join(", ")}</p>
       <p><strong>Hình thức thanh toán:</strong> ${booking.paymentMethod === "online" ? "Online" : "Trực tiếp tại quầy"}</p>

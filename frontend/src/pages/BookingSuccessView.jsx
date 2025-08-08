@@ -17,7 +17,7 @@ function BookingSuccessView() {
     );
   }
 
-  const { bookingDate, timeSlots, _id, phone, finalPrice, paymentMethod } = booking;
+  const { bookingDate, timeSlots, bookingCode, phone, finalPrice, paymentMethod } = booking;
 
   return (
     <MainLayout>
@@ -26,7 +26,7 @@ function BookingSuccessView() {
         <p className="success-sub">Vui lòng lưu lại thông tin sau để xác nhận khi đến nhận phòng:</p>
 
         <div className="success-box">
-          <p><strong>Mã đơn:</strong> {_id}</p>
+          <p><strong>Mã đơn:</strong> {bookingCode}</p>
           <p><strong>Ngày:</strong> {new Date(bookingDate).toLocaleDateString()}</p>
           <p><strong>Khung giờ:</strong> {timeSlots.join(", ")}</p>
           <p><strong>Số điện thoại:</strong> {phone}</p>

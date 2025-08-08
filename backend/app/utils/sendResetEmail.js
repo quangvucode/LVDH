@@ -1,4 +1,3 @@
-// utils/sendResetEmail.js
 const nodemailer = require("nodemailer");
 
 const sendResetEmail = async (email, token, name = "") => {

@@ -24,7 +24,7 @@ exports.register = async (req, res) => {
         existingEmail.phone = phone;
         existingEmail.password = hashedPassword;
         existingEmail.verifyToken = newToken;
-        existingEmail.verifyTokenExpires = new Date(Date.now() + 60 * 1000); // 1 phút
+        existingEmail.verifyTokenExpires = new Date(Date.now() + 15 * 60 * 1000);
         await existingEmail.save();
     
         await sendVerificationEmail(email, newToken, name);
@@ -42,7 +42,7 @@ exports.register = async (req, res) => {
       email,
       password: hashedPassword,
       verifyToken: token,
-      verifyTokenExpires: new Date(Date.now() + 60 * 1000) // 1 phút
+      verifyTokenExpires : new Date(Date.now() + 15 * 60 * 1000)
     });
 
     await newUser.save();
@@ -67,6 +67,10 @@ exports.login = async (req, res) => {
 
     if (!user.isVerified) {
       return res.status(403).json({ message: "Tài khoản chưa xác minh email, Đăng ký lại để nhận mail" });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({ message: "Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -121,6 +125,10 @@ exports.requestPasswordReset = async (req, res) => {
 
     // Chặn nếu tài khoản chưa xác minh
     if (!user.isVerified) return res.status(403).json({ message: "Tài khoản chưa được xác minh email." });
+
+    if (!user.isActive) {
+      return res.status(403).json({ message: "Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên." });
+    }
 
     const token = crypto.randomBytes(32).toString("hex");
     user.resetToken = token;

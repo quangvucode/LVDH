@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { login } from "../services/serviceApi";
 import MainLayout from "../layouts/MainLayout";
 import { useNavigate, Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function LoginView() {
   const { register, handleSubmit } = useForm();
@@ -16,17 +17,29 @@ function LoginView() {
       localStorage.setItem("token", token);
       localStorage.setItem("role", user.role);
 
-      alert("Đăng nhập thành công");
+      Swal.fire({
+        icon: "success",
+        title: "Đăng nhập thành công",
+        showConfirmButton: false,
+        timer: 1200,
+      });
 
-      if (user.role === "admin") {
-      navigate("/admin/dashboard");
-    } else {
-      navigate("/");
+      setTimeout(() => {
+        if (user.role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
+      }, 1200);
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Lỗi đăng nhập",
+        text: err.response?.data?.message || "Đăng nhập thất bại",
+        confirmButtonText: "Đóng",
+      });
     }
-  } catch (err) {
-    alert(err.response?.data?.message || "Đăng nhập thất bại");
-  }
-};
+  };
 
   return (
     <MainLayout>

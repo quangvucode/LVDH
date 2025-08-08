@@ -15,7 +15,7 @@ const sendVerificationEmail = async (email, token, name = '') => {
   const link = `http://localhost:5000/api/auth/verify-email/${token}`;
 
   await transporter.sendMail({
-    from: `"RabitHomestay" <${process.env.EMAIL_USER}>`,
+    from: `"RabbitHomestay" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'Xác minh tài khoản - RabbitHomestay',
     html: `

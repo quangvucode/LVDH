@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import ChatbotWidget from "../components/ChatbotWidget"; //Chatbot
 
 function MainLayout({ children }) {
   return (
@@ -7,6 +8,7 @@ function MainLayout({ children }) {
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
+       <ChatbotWidget />
     </div>
   );
 }

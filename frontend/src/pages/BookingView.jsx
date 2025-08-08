@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import { getRoomById, getBookedSlotsByRoom } from "../services/serviceApi";
 import { CalendarIcon } from "lucide-react";
+import Swal from 'sweetalert2';
 
 function BookingView() {
   const { roomId } = useParams();
@@ -60,12 +61,27 @@ function BookingView() {
 
   const toggleSlot = (date, slot) => {
     const key = `${date}_${slot}`;
-    if (selectedSlots.includes(key)) {
-      setSelectedSlots(prev => prev.filter(k => k !== key));
-    } else {
-      setSelectedSlots(prev => [...prev, key]);
+    const firstDate = selectedSlots[0]?.split("_")[0];
+
+    // Đang có slot ở ngày khác
+    if (selectedSlots.length && firstDate !== date) {
+      Swal.fire({
+        title: 'Đã chuyển sang ngày khác',
+        icon: 'info',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        setSelectedSlots([key]);
+      });
+      return;
     }
+
+    // Cùng một ngày
+    setSelectedSlots(prev =>
+      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+    );
   };
+
+
 
   const isFullDay = (day) => timeSlotOrder.every(slot => selectedSlots.includes(`${day}_${slot}`));
 
@@ -79,25 +95,35 @@ function BookingView() {
   };
 
   const calculateTotal = () => {
-    if (!room) return 0;
-    let total = 0;
-    let discount = 0;
-    const grouped = {};
-    selectedSlots.forEach(key => {
-      const [date, slot] = key.split("_");
-      if (!grouped[date]) grouped[date] = [];
-      grouped[date].push(slot);
-      total += slot === "20:00-08:00" ? room.priceNight : room.priceDay;
-    });
+  if (!room) return 0;
 
+  let total = 0;
+  const grouped = {};
+
+  selectedSlots.forEach(key => {
+    const [date, slot] = key.split("_");
+    if (!grouped[date]) grouped[date] = [];
+    grouped[date].push(slot);
+    total += slot === "20:00-08:00" ? room.priceNight : room.priceDay;
+  });
+
+  let discount = 0;
+
+  if (paymentMethod === "online") {
+    discount += 10;
     Object.keys(grouped).forEach(day => {
-      if (grouped[day].length >= 2 && areConsecutive(day)) discount += 10;
-      if (isFullDay(day)) discount += 20;
+      if (isFullDay(day)) {
+        discount += 20;
+      } else if (areConsecutive(day)) {
+        discount += 10;
+      }
     });
+  }
 
-    if (paymentMethod === "online") discount += 10;
-    return Math.round(total * (1 - discount / 100));
-  };
+  return Math.round(total * (1 - discount / 100));
+};
+
+
 
   return (
     <MainLayout>

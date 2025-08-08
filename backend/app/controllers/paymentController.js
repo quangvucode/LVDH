@@ -24,7 +24,7 @@ exports.createPaymentUrl = async (req, res) => {
 
     const paymentUrl = vnpay.buildPaymentUrl({
       vnp_TxnRef: bookingId,
-      vnp_Amount: amount , // VNPay yêu cầu nhân 100
+      vnp_Amount: amount , // * 100
       vnp_IpAddr: req.ip || '127.0.0.1',
       vnp_OrderInfo: `Thanh toán đơn đặt phòng ${bookingId}`,
       vnp_OrderType: ProductCode.Other,
@@ -63,7 +63,7 @@ exports.handleVnpReturn = async (req, res) => {
       const room = await Room.findById(booking.roomId);
       const roomName = room ? room.roomName : "Không xác định";
       
-      if (booking.email) {
+      if (booking.email && booking.sendMail) {
         await sendBookingEmail(booking, roomName);
       }
 
@@ -71,6 +71,7 @@ exports.handleVnpReturn = async (req, res) => {
         message: "Thanh toán thành công!",
         booking: {
           _id: booking._id,
+          bookingCode: booking.bookingCode,
           bookingDate: booking.bookingDate,
           timeSlots: booking.timeSlots,
           phone: booking.phone,
@@ -93,7 +94,7 @@ exports.handleVnpReturn = async (req, res) => {
 };
 
 
-exports.sendSuccessEmail = async (req, res) => {
+/* exports.sendSuccessEmail = async (req, res) => {
   const { bookingId } = req.body;
 
   if (!bookingId) return res.status(400).json({ message: "Thiếu bookingId" });
@@ -110,5 +111,4 @@ exports.sendSuccessEmail = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Lỗi server", error: err.message });
   }
-};
-  
+}; */

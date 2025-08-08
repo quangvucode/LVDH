@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import HomeView from "../pages/HomeView";
 import LoginView from "../pages/LoginView";
 import RegisterView from "../pages/RegisterView";
@@ -14,6 +16,12 @@ import VnpReturnView from "../pages/VnpReturnView";
 import PrivateRouteAdmin from "../routes/PrivateRouteAdmin";
 import AdminLayout from "../layouts/AdminLayout";
 import DashboardView from "../pages/adminPages/DashboardView";
+import ManageBookingView from "../pages/adminPages/ManageBookingView";
+import ManageRoomView from "../pages/adminPages/ManageRoomView";
+import ManageServiceView from "../pages/adminPages/ManageServiceView";
+import ManageInvoiceView from "../pages/adminPages/ManageInvoiceView";
+import ManageUserView from "../pages/adminPages/ManageUserView";
+import ContactView from "../pages/ContactView";
 
 
 function AppRouter() {
@@ -32,12 +40,21 @@ function AppRouter() {
         <Route path="/payment" element={<PaymentView />} />
         <Route path="/booking-success" element={<BookingSuccessView />} />
         <Route path="/vnpay-return" element={<VnpReturnView />} />
+        <Route path="/contact" element={<ContactView />} />
 
         {/* ADMIN */}
         <Route path="/admin" element={<PrivateRouteAdmin><AdminLayout /></PrivateRouteAdmin>}>
         <Route path="dashboard" element={<DashboardView />} />
+        <Route path="bookings" element={<ManageBookingView />} />
+        <Route path="rooms" element={<ManageRoomView />} />
+        <Route path="services" element={<ManageServiceView />} />
+        <Route path="invoices" element={<ManageInvoiceView />} />
+        <Route path="users" element={<ManageUserView />} />
+
+
         </Route>
       </Routes>
+      <ToastContainer position="top-right" autoClose={3000} />
     </Router>
   );
 }

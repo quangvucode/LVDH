@@ -46,7 +46,7 @@ function VnpReturnView() {
 
             {status === "success" && booking && (
               <div className="vnp-info">
-                <p><strong>Mã đơn:</strong> {booking._id}</p>
+                <p><strong>Mã đơn:</strong> {booking.bookingCode}</p>
                 <p><strong>Ngày:</strong> {new Date(booking.bookingDate).toLocaleDateString()}</p>
                 <p><strong>Khung giờ:</strong> {booking.timeSlots.join(", ")}</p>
                 <p><strong>Số điện thoại:</strong> {booking.phone}</p>

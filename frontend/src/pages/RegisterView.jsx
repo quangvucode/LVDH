@@ -4,11 +4,7 @@ import { register as registerApi } from "../services/serviceApi";
 import MainLayout from "../layouts/MainLayout";
 
 function RegisterView() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, formState: { errors }, watch } = useForm();
 
   const formatName = (name) => {
     return name
@@ -22,9 +18,10 @@ function RegisterView() {
 
   const onSubmit = async (data) => {
     data.name = formatName(data.name);
+    const { confirmPassword, ...payload } = data;
 
     try {
-      const res = await registerApi(data);
+      const res = await registerApi(payload);
       alert(res.data.message || "Đăng ký thành công!");
     } catch (err) {
       alert(err.response?.data?.message || "Đăng ký thất bại");
@@ -41,6 +38,11 @@ function RegisterView() {
             {...register("name", {
               required: "Vui lòng nhập họ tên",
               minLength: { value: 3, message: "Tên quá ngắn" },
+              maxLength: { value: 50, message: "Tên quá dài (tối đa 50 ký tự)" },
+              pattern: {
+                value: /^[A-Za-zÀ-ỹ\s]+$/,
+                message: "Họ tên chỉ được chứa chữ cái và khoảng trắng",
+              },
             })}
             placeholder="Họ tên"
           />
@@ -72,23 +74,31 @@ function RegisterView() {
           {errors.email && <p className="error">{errors.email.message}</p>}
 
           <input
-            {...register("password", {
-              required: "Vui lòng nhập mật khẩu",
-              minLength: {
-                value: 8,
-                message: "Mật khẩu phải có ít nhất 8 ký tự",
-              },
-              pattern: {
-                value: /^(?=.*[A-Z])(?=.*[^A-Za-z0-9])/,
-                message:
-                  "Mật khẩu phải có ít nhất 1 chữ in hoa và 1 ký tự đặc biệt",
-              },
-            })}
-            type="password"
-            placeholder="Mật khẩu"
+             {...register("password", {
+               required: "Vui lòng nhập mật khẩu",
+               minLength: { value: 8, message: "Mật khẩu tối thiểu 8 ký tự" },
+               maxLength: { value: 50, message: "Mật khẩu tối đa 50 ký tự" },
+               pattern: {
+                 value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/,
+                 message: "Phải có chữ thường, chữ hoa, số và ký tự đặc biệt",
+               },
+               validate: {
+                 noEdgeSpaces: (v) => v.trim() === v || "Không có khoảng trắng ở đầu/cuối",
+               },
+             })}
+             type="password"
+             placeholder="Mật khẩu"
           />
           {errors.password && <p className="error">{errors.password.message}</p>}
-
+          <input
+            {...register("confirmPassword", {
+              required: "Vui lòng nhập lại mật khẩu",
+              validate: (v) => v === watch("password") || "Mật khẩu nhập lại không khớp",
+            })}
+            type="password"
+            placeholder="Nhập lại mật khẩu"
+          />
+          {errors.confirmPassword && <p className="error">{errors.confirmPassword.message}</p>}
           <button type="submit">Đăng ký</button>
         </form>
       </div>

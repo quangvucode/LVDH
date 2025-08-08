@@ -2,6 +2,8 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:5000/api"; // hoặc chỉnh port backend
 
+axios.defaults.withCredentials = true; 
+
 // ===== AUTH =====
 export const login = (data) => axios.post(`${BASE_URL}/auth/login`, data);
 export const register = (data) => axios.post(`${BASE_URL}/auth/register`, data);
@@ -69,3 +71,7 @@ export const createPayment = (data) =>
   
   
   
+export const sendChatMessage = (message, sessionId) =>
+  axios.post(`${BASE_URL}/chat`, { message, sessionId }, 
+    { withCredentials: true });
+

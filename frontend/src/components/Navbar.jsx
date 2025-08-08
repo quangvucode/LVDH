@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import "../styles/Navbar.css";
 
 function Navbar() {
@@ -12,9 +13,18 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    navigate("/");
+    Swal.fire({
+      icon: "success",
+      title: "Đăng xuất thành công",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  
+    setTimeout(() => {
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+      navigate("/");
+    }, 1500);
   };
 
   return (

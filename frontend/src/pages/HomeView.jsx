@@ -11,22 +11,30 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon } from "lucide-react";
 import "../styles/swiper-custom.css";
 
-
 function HomeView() {
   const [roomName, setRoomName] = useState("");
   const [utilities, setUtilities] = useState([]);
   const [results, setResults] = useState([]);
   const [allRooms, setAllRooms] = useState([]);
+  const [featuredRooms, setFeaturedRooms] = useState([]);
+  const [noResult, setNoResult] = useState(false);
+
 
   const navigate = useNavigate();
 
-  const allUtilities = ["Netflix", "Máy chiếu", "Máy nước nóng", "Bồn tắm", "Ban công rộng", "Máy lạnh"];
+  const allUtilities = ["Netflix", "Máy chiếu", "Máy nước nóng", "Bồn tắm", "Bàn bida", "Máy lạnh"];
 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
         const res = await getAllRooms();
-        setAllRooms(res.data || []);
+        const originalRooms = res.data || [];
+
+        // Trộn thứ tự ngẫu nhiên và chọn 5 phòng cho slider
+        const shuffled = [...originalRooms].sort(() => Math.random() - 0.5);
+
+        setAllRooms(originalRooms);
+        setFeaturedRooms(shuffled.slice(0, 5));
       } catch (err) {
         alert("Không thể tải danh sách phòng");
       }
@@ -41,17 +49,21 @@ function HomeView() {
   };
 
   const handleSearch = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await filterRooms({
-        name: roomName.trim(),
-        amenities: utilities
-      });
-      setResults(res.data.rooms || []);
-    } catch (err) {
-      alert("Lỗi tìm kiếm phòng");
-    }
-  };
+  e.preventDefault();
+  try {
+    const res = await filterRooms({
+      name: roomName.trim(),
+      amenities: utilities
+    });
+
+    const filteredRooms = res.data.rooms || [];
+    setResults(filteredRooms);
+    setNoResult(filteredRooms.length === 0); // rỗng
+  } catch (err) {
+    alert("Lỗi tìm kiếm phòng");
+  }
+};
+
 
   const RoomCard = ({ room }) => (
     <motion.div
@@ -137,7 +149,11 @@ function HomeView() {
 
         {/* PHẦN SLIDER PHÒNG NỔI BẬT */}
         <h2 className="text-2xl text-purple-800 font-bold mb-6 text-center">
-          Các phòng nổi bật
+          {results.length > 0
+            ? "Kết quả tìm kiếm"
+            : noResult
+            ? "Không có phòng phù hợp với từ khóa đã nhập"
+            : "Tất cả các phòng"}
         </h2>
 
         <div className="flex justify-center mb-16">
@@ -150,19 +166,23 @@ function HomeView() {
               modules={[Pagination, Navigation]}
               className="w-full"
             >
-              {allRooms.map((room) => (
+              {featuredRooms.map((room) => (
                 <SwiperSlide key={room._id}>
-                  <motion.img
+                  <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6 }}
-                    src={`http://localhost:5000${room.imageUrls?.[0] || ""}`}
-                    alt={room.name}
-                    className="w-full h-[576px] object-cover rounded-2xl cursor-pointer"
                     onClick={() => navigate(`/room/${room._id}`)}
-                  />
+                    className="cursor-pointer select-none"
+                  >
+                    <img
+                      src={`http://localhost:5000${room.imageUrls?.[0] || ""}`}
+                      alt={room.name}
+                      className="w-full h-[576px] object-cover rounded-2xl transition-transform hover:scale-[1.01]"
+                      draggable={false}
+                    />
+                  </motion.div>
                 </SwiperSlide>
-                
               ))}
             </Swiper>
           </div>
@@ -174,12 +194,19 @@ function HomeView() {
         </h2>
 
         <AnimatePresence mode="wait">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {(results.length > 0 ? results : allRooms).map((room) => (
-              <RoomCard key={room._id} room={room} />
-            ))}
-          </div>
+          {noResult ? (
+            <div className="text-center text-gray-500 col-span-full py-12">
+              Không có phòng phù hợp với từ khóa hoặc tiện ích đã chọn.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {(results.length > 0 ? results : allRooms).map((room) => (
+                <RoomCard key={room._id} room={room} />
+              ))}
+            </div>
+          )}
         </AnimatePresence>
+
       </div>
     </MainLayout>
   );

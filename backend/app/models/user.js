@@ -44,7 +44,11 @@ const userSchema = new mongoose.Schema({
   resetToken: { type: String 
     
   },
-  resetTokenExpires: { type: Date }
+  resetTokenExpires: { type: Date },
+
+  isActive: { type: Boolean, 
+    default: true }
+
 });
 
 // Export model để dùng trong controller
