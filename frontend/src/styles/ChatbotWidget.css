@@ -107,6 +107,18 @@
     text-align: left;
 }
 
+.chatbot-message a {
+    color: #007bff;
+    text-decoration: underline;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.chatbot-message a:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
 .chatbot-label {
     font-size: 12px;
     font-weight: bold;

@@ -64,3 +64,82 @@
     margin-top: -6px;
     margin-bottom: 10px;
 }
+
+
+.form-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+
+.register-form.is-loading {
+    position: relative;
+    filter: saturate(0.8);
+}
+
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.spinner--btn {
+    width: 18px;
+    height: 18px;
+    border-width: 2px;
+    margin-right: 8px;
+    vertical-align: -3px;
+}
+
+.loading-text {
+    margin-top: 8px;
+    color: #374151;
+    font-size: 14px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 10px 14px;
+    background: #2563eb;
+    color: #fff;
+    border: 0;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.02s ease;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+}
+
+.btn-primary[disabled] {
+    background: #93c5fd;
+    cursor: not-allowed;
+}
+
+.btn-loading {
+    display: inline-flex;
+    align-items: center;
+}

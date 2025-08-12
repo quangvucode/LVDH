@@ -127,7 +127,7 @@ function ChatbotWidget() {
                 <div className="chatbot-label">
                   {msg.sender === "user" ? "Bạn" : msg.botName || "Trợ lý"}:
                 </div>
-                <div>{msg.text}</div>
+                <div dangerouslySetInnerHTML={{ __html: msg.text }}></div>
               </div>
             ))}
             <div ref={messagesEndRef} />

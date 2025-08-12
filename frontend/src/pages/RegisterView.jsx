@@ -1,10 +1,13 @@
 import "../styles/RegisterView.css";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import Swal from "sweetalert2";
 import { register as registerApi } from "../services/serviceApi";
 import MainLayout from "../layouts/MainLayout";
 
 function RegisterView() {
-  const { register, handleSubmit, formState: { errors }, watch } = useForm();
+  const { register, handleSubmit, formState: { errors }, watch, reset } = useForm();
+  const [loading, setLoading] = useState(false);
 
   const formatName = (name) => {
     return name
@@ -12,26 +15,54 @@ function RegisterView() {
       .trim()
       .replace(/\s+/g, " ")
       .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(" ");
   };
 
   const onSubmit = async (data) => {
-    data.name = formatName(data.name);
-    const { confirmPassword, ...payload } = data;
+    if (loading) return; // chặn bấm liên tiếp
+    setLoading(true);
 
     try {
+      data.name = formatName(data.name);
+      const { confirmPassword, ...payload } = data;
+
       const res = await registerApi(payload);
-      alert(res.data.message || "Đăng ký thành công!");
+
+      await Swal.fire({
+        icon: "success",
+        title: "Đăng ký thành công",
+        text: res?.data?.message || "Vui lòng kiểm tra email để xác minh tài khoản.",
+        confirmButtonText: "Đã hiểu"
+      });
+
+      reset(); // dọn form sau khi hiện thông báo
     } catch (err) {
-      alert(err.response?.data?.message || "Đăng ký thất bại");
+      await Swal.fire({
+        icon: "error",
+        title: "Đăng ký thất bại",
+        text: err?.response?.data?.message || "Có lỗi xảy ra. Vui lòng thử lại.",
+        confirmButtonText: "Đóng"
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <MainLayout>
       <div className="register-container">
-        <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
+        {/* overlay loading toàn form */}
+        {loading && <div className="form-overlay" aria-hidden="true">
+          <div className="spinner" />
+          <div className="loading-text">Đang xử lý...</div>
+        </div>}
+
+        <form
+          className={`register-form ${loading ? "is-loading" : ""}`}
+          onSubmit={handleSubmit(onSubmit)}
+          aria-busy={loading}
+        >
           <h2 className="form-title">Đăng ký</h2>
 
           <input
@@ -45,6 +76,7 @@ function RegisterView() {
               },
             })}
             placeholder="Họ tên"
+            disabled={loading}
           />
           {errors.name && <p className="error">{errors.name.message}</p>}
 
@@ -57,6 +89,7 @@ function RegisterView() {
               },
             })}
             placeholder="Số điện thoại"
+            disabled={loading}
           />
           {errors.phone && <p className="error">{errors.phone.message}</p>}
 
@@ -70,26 +103,29 @@ function RegisterView() {
             })}
             type="email"
             placeholder="Email"
+            disabled={loading}
           />
           {errors.email && <p className="error">{errors.email.message}</p>}
 
           <input
-             {...register("password", {
-               required: "Vui lòng nhập mật khẩu",
-               minLength: { value: 8, message: "Mật khẩu tối thiểu 8 ký tự" },
-               maxLength: { value: 50, message: "Mật khẩu tối đa 50 ký tự" },
-               pattern: {
-                 value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/,
-                 message: "Phải có chữ thường, chữ hoa, số và ký tự đặc biệt",
-               },
-               validate: {
-                 noEdgeSpaces: (v) => v.trim() === v || "Không có khoảng trắng ở đầu/cuối",
-               },
-             })}
-             type="password"
-             placeholder="Mật khẩu"
+            {...register("password", {
+              required: "Vui lòng nhập mật khẩu",
+              minLength: { value: 8, message: "Mật khẩu tối thiểu 8 ký tự" },
+              maxLength: { value: 50, message: "Mật khẩu tối đa 50 ký tự" },
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/,
+                message: "Phải có chữ thường, chữ hoa, số và ký tự đặc biệt",
+              },
+              validate: {
+                noEdgeSpaces: (v) => v.trim() === v || "Không có khoảng trắng ở đầu/cuối",
+              },
+            })}
+            type="password"
+            placeholder="Mật khẩu"
+            disabled={loading}
           />
           {errors.password && <p className="error">{errors.password.message}</p>}
+
           <input
             {...register("confirmPassword", {
               required: "Vui lòng nhập lại mật khẩu",
@@ -97,9 +133,23 @@ function RegisterView() {
             })}
             type="password"
             placeholder="Nhập lại mật khẩu"
+            disabled={loading}
           />
           {errors.confirmPassword && <p className="error">{errors.confirmPassword.message}</p>}
-          <button type="submit">Đăng ký</button>
+
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={loading}
+          >
+            {loading ? (
+              <span className="btn-loading">
+                <span className="spinner spinner--btn" /> Đang đăng ký...
+              </span>
+            ) : (
+              "Đăng ký"
+            )}
+          </button>
         </form>
       </div>
     </MainLayout>

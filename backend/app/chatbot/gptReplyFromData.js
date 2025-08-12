@@ -1,28 +1,37 @@
 const { chat } = require("../utils/openai");
 
+function formatDisplayDate(d) {
+  const date = new Date(d);
+  return `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()}`;
+}
+
 async function gptReplyFromData({ intent, data }) {
   if (!intent || !data) return "Xin lỗi, tôi chưa hiểu rõ câu hỏi của bạn.";
 
   // Xử lý trường hợp phòng không tồn tại hoặc không có data hợp lệ
-  if (data.roomNotFound) return "Xin lỗi, tôi không tìm thấy phòng bạn hỏi. Bạn vui lòng kiểm tra lại tên phòng.";
+  if (data.roomNotFound) { return `Xin lỗi, tôi không tìm thấy phòng "${data.originalName}". Bạn vui lòng kiểm tra lại tên phòng hoặc chọn phòng khác.`;}
+
 
   let info = "";
 
   switch (intent) {
     case "check_available_slot":
-      info = `
+      info = ` thông báo cho khách
       Phòng: ${data.roomName}
       Ngày: ${data.date}
       Các khung giờ còn trống: ${data.availableSlots.length > 0 ? data.availableSlots.join(", ") : "Không còn khung giờ nào trống"}
+      nếu không còn giờ trống thái độ vui vẻ kêu khách chọn ngày khác phòng khác
       `;
       break;
 
     case "available_rooms_on_date":
-      info = data.rooms.map(r =>
-        `Phòng ${r.roomName}: ${r.availableSlots.join(", ")}`
-      ).join("\n") || "Không còn phòng nào trống.";
-      info = `Ngày: ${data.date}\n${info}`;
-      break;
+    const formattedDate = data.date ? formatDisplayDate(data.date) : "không xác định";
+    const roomInfo = data.rooms.map(r =>
+      `Phòng ${r.roomName}: ${r.availableSlots.join(", ")}`
+    ).join("\n") || "Không còn phòng nào trống.";
+    info = `Ngày: ${formattedDate}\n${roomInfo}`;
+    break;
+
 
     case "ask_room_detail":
       info = `
@@ -44,17 +53,54 @@ async function gptReplyFromData({ intent, data }) {
     
     case "booking_request":
       if (data.bookingLink) {
-        info = `Bạn có thể đặt phòng ${data.roomName} bằng cách nhấn vào link sau: ${data.bookingLink}
-    Nếu bạn cần hỗ trợ thêm về thủ tục đặt phòng, hãy cho tôi biết nhé.`;
+        info = `
+        Khách muốn đặt phòng tên ${data.roomName}${data.date ? ` vào ngày ${formatDisplayDate(data.date)}` : ""}.
+        Hãy viết câu trả lời thân thiện, mời khách đặt phòng, và CHÈN LINK HTML dưới dạng:
+        <a href="${data.bookingLink}" target="_blank">Đặt phòng tại đây</a>
+        `.trim();
       } else {
-        info = "Xin lỗi, tôi chưa thể lấy được link đặt phòng. Bạn kiểm tra lại tên phòng hoặc liên hệ hỗ trợ.";
+        info = `
+        Hỏi lại khách hàng tên phòng mà khách hàng muốn đặt 
+        `.trim();
       }
       break;
 
+    case "ask_contact_info":
+        info = `
+        Khách hỏi thông tin liên hệ hoặc địa chỉ khách sạn.
+        Hãy chèn HTML link dạng: <a href="${data.contactLink}" target="_blank">${data.contactLink}</a>
+        Mời khách truy cập link và không trả lời gì thêm.
+        `.trim();
+        break;
+
+    case "lookup_booking":
+      if (data.error) {
+          return "Bạn vui lòng cung cấp số điện thoại và ngày đặt phòng để tôi tra cứu.";
+        }
+        if (data.notFound) {
+          return "Không tìm thấy đơn đặt phòng nào khớp với thông tin bạn cung cấp.";
+        }
+
+        const bookingList = data.bookings.map(b =>
+          `Tên khách hàng: ${b.name}
+          Mã đơn: ${b.bookingCode}
+          Tên phòng: ${b.roomName}
+          Ngày: ${formatDisplayDate(b.date)}
+          Khung giờ: ${b.timeSlots.join(", ")}
+          Thanh toán: ${b.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}`
+        ).join("\n\n");
+
+        info = `
+        Kết quả tra cứu đặt phòng:
+        ${bookingList}
+        `.trim();
+      break;
+
+        
 
     default:
       return "Xin lỗi, hệ thống chưa hỗ trợ câu hỏi này.";
-  }
+    }
 
   // Log dữ liệu gửi GPT
   console.log("[GPTPrompt]", { intent, data, info });

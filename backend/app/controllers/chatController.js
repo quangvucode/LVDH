@@ -38,7 +38,9 @@ exports.handleChat = async (req, res) => {
       "available_rooms_on_date",
       "ask_room_detail",
       "ask_room_price",
-      "booking_request"
+      "booking_request",
+      "ask_contact_info",
+      "lookup_booking",
     ];
 
     if (logicIntents.includes(intent)) {

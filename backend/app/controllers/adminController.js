@@ -162,7 +162,7 @@ exports.getDashboardStats = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find() // chỉ lấy user bình thường
+    const users = await User.find({ isVerified: true }) 
       .select("-password -verifyToken -verifyTokenExpires")
       .sort({ createdAt: -1 }); // mới nhất lên trước
 
