@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,        // dùng String vì có thể chứa số 0 đầu
     required: true,      // bắt buộc nhập
-    unique: true         // không được trùng số điện thoại
   },
   email: {
     type: String,

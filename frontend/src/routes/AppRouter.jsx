@@ -3,6 +3,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HomeView from "../pages/HomeView";
 import LoginView from "../pages/LoginView";
+import VerifySuccessView from "../pages/VerifySuccessView";
+import VerifyFailedView from "../pages/VerifyFailedView";
+
 import RegisterView from "../pages/RegisterView";
 import RoomDetailView from "../pages/RoomDetailView";
 import AccountView from "../pages/AccountView";
@@ -41,6 +44,9 @@ function AppRouter() {
         <Route path="/booking-success" element={<BookingSuccessView />} />
         <Route path="/vnpay-return" element={<VnpReturnView />} />
         <Route path="/contact" element={<ContactView />} />
+        <Route path="/verify-success" element={<VerifySuccessView />} />
+        <Route path="/verify-failed" element={<VerifyFailedView />} />
+
 
         {/* ADMIN */}
         <Route path="/admin" element={<PrivateRouteAdmin><AdminLayout /></PrivateRouteAdmin>}>

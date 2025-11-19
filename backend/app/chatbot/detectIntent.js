@@ -107,7 +107,7 @@ function detectIntent(message) {
     };
   }
 
-  // phòng () còn giờ nào nay/mai
+  // phòng () còn giờ nào 
   if (
     /(phòng|loại phòng).*(còn|trống|slot|có không|hết chưa|khả dụng)/.test(msg) &&
     entities.roomName
@@ -119,7 +119,7 @@ function detectIntent(message) {
     };
   }
 
-  // khung giờ còn
+ /* // khung giờ còn
   if (
     /(slot|khung giờ|giờ).*(còn|trống|có không|hết chưa|khả dụng)/.test(msg)
   ) {
@@ -128,7 +128,7 @@ function detectIntent(message) {
       intent: "check_specific_slot",
       entities: { slot: entities.slot, date: entities.date }
     };
-  }
+  }*/
 
   // slot có thể đặt
   if (

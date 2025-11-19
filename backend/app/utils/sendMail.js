@@ -12,7 +12,9 @@ const sendVerificationEmail = async (email, token, name = '') => {
     }
   });
 
-  const link = `http://localhost:5000/api/auth/verify-email/${token}`;
+  const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+
+  const link = `${BACKEND_URL}/api/auth/verify-email/${token}`;
 
   await transporter.sendMail({
     from: `"RabbitHomestay" <${process.env.EMAIL_USER}>`,
@@ -26,7 +28,7 @@ const sendVerificationEmail = async (email, token, name = '') => {
         <p>Vui lòng nhấn vào liên kết bên dưới để xác minh tài khoản của bạn:</p>
         <p><a href="${link}" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: white; text-decoration: none; border-radius: 5px;">Xác minh ngay</a></p>
         <p>Nếu bạn không tiếp tục thực hiện đăng ký, hãy bỏ qua email này.</p>
-        <p>Trân trọng,<br>Đội ngũ RabbitHomestay</p>
+        <p>Trân trọng,<br>RabbitHomestay</p>
       </div>
     `
   });

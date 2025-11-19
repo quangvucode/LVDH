@@ -59,6 +59,21 @@ function BookingView() {
     if (roomId) fetchAllBooked();
   }, [roomId, next10Days]);
 
+  useEffect(() => {
+  const fetchSearchedDate = async () => {
+    if (!roomId || !searchDate) return; 
+    if (bookedSlots[searchDate]) return; 
+    try {
+      const res = await getBookedSlotsByRoom(roomId, searchDate);
+      setBookedSlots(prev => ({ ...prev, [searchDate]: res.data.bookedSlots }));
+    } catch {
+      setBookedSlots(prev => ({ ...prev, [searchDate]: [] }));
+    }
+  };
+  fetchSearchedDate();
+}, [roomId, searchDate, bookedSlots]);
+
+
   const toggleSlot = (date, slot) => {
     const key = `${date}_${slot}`;
     const firstDate = selectedSlots[0]?.split("_")[0];
@@ -169,7 +184,7 @@ function BookingView() {
                   </tr>
                 </thead>
                 <tbody>
-                  {next10Days.filter(date => !searchDate || date === searchDate).map(date => (
+                  {(searchDate ? [searchDate] : next10Days).map(date => (
                     <tr key={date}>
                       <td className="p-2 font-medium whitespace-nowrap text-left">{date}</td>
                       {timeSlotOrder.map(slot => {

@@ -98,12 +98,21 @@ exports.login = async (req, res) => {
 
 exports.verifyEmail = async (req, res) => {
   const { token } = req.params;
+  const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
   try {
     const user = await User.findOne({ verifyToken: token });
 
-    if (!user || user.verifyTokenExpires < Date.now()) {
-      return res.status(400).send("Token không hợp lệ hoặc đã hết hạn");
+    if (!user) {
+      return res.redirect(`${FRONTEND_URL}/verify-failed?reason=invalid`);
+    }
+
+    if (!user.verifyTokenExpires || user.verifyTokenExpires.getTime() < Date.now()) {
+      return res.redirect(`${FRONTEND_URL}/verify-failed?reason=expired`);
+    }
+
+    if (user.isVerified) {
+      return res.redirect(`${FRONTEND_URL}/verify-success?status=already`);
     }
 
     user.isVerified = true;
@@ -111,9 +120,9 @@ exports.verifyEmail = async (req, res) => {
     user.verifyTokenExpires = null;
     await user.save();
 
-    res.send("Tài khoản đã được xác minh thành công!");
+    return res.redirect(`${FRONTEND_URL}/verify-success`);
   } catch (error) {
-    res.status(500).json({ message: "Lỗi server", error: error.message });
+    return res.redirect(`${FRONTEND_URL}/verify-failed?reason=server`);
   }
 };
 
@@ -168,6 +177,3 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ message: "Lỗi server." });
   }
 };
-
-
-

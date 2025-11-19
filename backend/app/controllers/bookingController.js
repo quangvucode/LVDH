@@ -32,11 +32,15 @@ exports.createBooking = async (req, res) => {
     if (!room) {
       return res.status(404).json({ message: 'Không tìm thấy phòng' });
     }
+    
+    const start = new Date(bookingDate); start.setHours(0,0,0,0);
+    const end   = new Date(bookingDate); end.setHours(23,59,59,999);
 
     const existingBooking = await Booking.findOne({
       roomId,
-      bookingDate: new Date(bookingDate),
-      timeSlots: { $in: timeSlots }
+      bookingDate: { $gte: start, $lte: end },
+      timeSlots: { $in: timeSlots },
+      cancelStatus: { $ne: 'accepted' }   // đồng bộ với API disable
     });
 
     if (existingBooking) {
@@ -226,9 +230,13 @@ exports.getBookedSlotsByRoom = async (req, res) => {
   if (!date) return res.status(400).json({ message: "Thiếu ngày cần kiểm tra" });
 
   try {
+
+    const start = new Date(date); start.setHours(0,0,0,0);
+    const end   = new Date(date); end.setHours(23,59,59,999);
+
     const bookings = await Booking.find({
       roomId,
-      bookingDate: new Date(date),
+      bookingDate: { $gte: start, $lte: end },
       cancelStatus: { $ne: "accepted" }
     });
     const ALL_SLOTS = ["09:30-12:30", "13:00-16:00", "16:30-19:30", "20:00-08:00"];
